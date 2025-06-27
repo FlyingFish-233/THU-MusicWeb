@@ -28,9 +28,37 @@ def load_singer():
             url = singer['url']
         )
 
-# python manage.py shell
-# from load_singer import load_singer
-# load_singer()
+def load_song():
+    for i in range(song_num):
+        os.chdir('Crawler')
+        song = getSongInfo(i)
+        os.chdir('..')
+        Song.objects.create(
+            id = song['id'],
+            name = song['name'],
+            img_path = song['img_path'],
+            lyric = song['lyric'],
+            description = song['description'],
+            info_items = song['info_items'],
+            url = song['url'],
+            singer_name = song['singer_name']
+        )
 
-if __name__ == '__main__':
-    load_singer()
+
+def load_ss_edge():
+    os.chdir('Crawler')
+    ss_edges = getSSEdge()
+    os.chdir('..')
+    for singer_id, song_id in ss_edges:
+        singer = Singer.objects.get(id=singer_id)
+        song = Song.objects.get(id=song_id)
+        song.singers.add(singer)
+
+
+'''
+python manage.py shell
+from load_data import *
+load_singer()
+load_song()
+load_ss_edge()
+'''
