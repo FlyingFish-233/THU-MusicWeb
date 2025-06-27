@@ -16,10 +16,17 @@ WDW_LIM = 10
 # 一个json文件存储的歌手数量
 SINGER_BATCH_SIZE = 10
 
+# 一个歌手爬取的歌曲数量
+SONG_PER_SINGER = 10
+
 # 存储歌手图片的路径
 img_dir = 'singer/img/'
 # 存储歌手信息的路径
 json_dir = 'singer/json/'
+# 存储歌曲url的路径
+song_path = 'song/urls.json'
+# 存储歌手-歌曲对应关系的路径
+edge_path = 'song/ss_edges.json'
 
 class SingerCrawler(BaseCrawler):
 
@@ -27,8 +34,11 @@ class SingerCrawler(BaseCrawler):
         super().__init__()
         os.makedirs(img_dir, exist_ok=True)
         os.makedirs(json_dir, exist_ok=True)
+        os.makedirs('song/', exist_ok=True)
         self.urls = getSingerURL()
         self.singers = []
+        self.song_urls = {}
+        self.ss_edges = []
     
 
     def crawl_singer_page(self, url, id):
@@ -61,20 +71,43 @@ class SingerCrawler(BaseCrawler):
             'info_items':info_items,
             'url':url
         })
+        # 歌曲的url及其与歌手的对应关系
+        song_tags = self.driver.find_elements(By.XPATH, '//span[@class="songlist__songname_txt"]/a')
+        for i in range(min(len(song_tags), SONG_PER_SINGER)):
+            song_url = song_tags[i].get_attribute('href')
+            if song_url in self.song_urls:
+                song_id = self.song_urls[song_url]
+            else:
+                song_id = len(self.song_urls)
+                self.song_urls[song_url] = song_id
+            self.ss_edges.append((id, song_id))
     
 
-    def crawl(self):
-        for i, url in enumerate(tqdm(self.urls, desc='爬取进度')):
-            self.crawl_singer_page(url, i + 1)
-            if (i + 1) % SINGER_BATCH_SIZE == 0 or i == len(self.urls) - 1:
-                self.save(i // SINGER_BATCH_SIZE + 1)
-
-
+    # 保存歌手信息
     def save(self, idx):
         path = os.path.join(json_dir, f'singer{idx}.json')
         with open(path, 'w', encoding='utf-8') as f:
             json.dump(self.singers, f)
             self.singers = []
+
+    
+    # 保存歌曲及歌手-歌曲对应关系
+    def save_songs(self):
+        song_urls = [""] * len(self.song_urls)
+        for song_url, song_id in self.song_urls.items():
+            song_urls[song_id] = song_url
+        with open(song_path, 'w', encoding='utf-8') as f:
+            json.dump(song_urls, f)
+        with open(edge_path, 'w', encoding='utf-8') as f:
+            json.dump(self.ss_edges, f)
+    
+
+    def crawl(self):
+        for i, url in enumerate(tqdm(self.urls, desc='爬取进度')):
+            self.crawl_singer_page(url, i)
+            if (i + 1) % SINGER_BATCH_SIZE == 0 or i == len(self.urls) - 1:
+                self.save(i // SINGER_BATCH_SIZE + 1)
+        self.save_songs()
 
 
 def getSingerInfo(idx, crawl=False):
@@ -86,9 +119,33 @@ def getSingerInfo(idx, crawl=False):
     with open(path, 'r', encoding='utf-8') as f:
         singers = json.load(f)
         return singers
+    
+
+def getSongURL(crawl=False):
+    if crawl:
+        crawler = SingerCrawler()
+        crawler.login()
+        crawler.crawl()
+    with open(song_path, 'r', encoding='utf-8') as f:
+        song_urls = json.load(f)
+        return song_urls
+    
+
+def getSSEdge(crawl=False):
+    if crawl:
+        crawler = SingerCrawler()
+        crawler.login()
+        crawler.crawl()
+    with open(edge_path, 'r', encoding='utf-8') as f:
+        ss_edges = json.load(f)
+        return ss_edges
 
 
 if __name__ == '__main__':
-    singers = getSingerInfo(1, crawl=False)
+    singers = getSingerInfo(30, crawl=False)
     for singer in singers:
-        print(singer['url'])
+        print(singer['info_items'])
+    song_urls = getSongURL(crawl=False)
+    print(len(song_urls))
+    ss_edges = getSSEdge(crawl=False)
+    print(len(ss_edges))

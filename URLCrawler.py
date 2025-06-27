@@ -2,11 +2,12 @@ from selenium.webdriver.common.by import By
 
 import time
 import os
+import json
 
 from BaseCrawler import BaseCrawler
 
 SINGER_MAX = 300
-path = 'singer/urls.txt'
+path = 'singer/urls.json'
 
 class URLCrawler(BaseCrawler):
 
@@ -14,6 +15,12 @@ class URLCrawler(BaseCrawler):
         super().__init__()
         os.makedirs('singer/', exist_ok=True)
         self.urls = []
+
+
+    def save(self):
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(self.urls, f)
+
 
     def crawl(self):
         # 向下滚动
@@ -28,21 +35,17 @@ class URLCrawler(BaseCrawler):
         self.urls = singer_urls[:SINGER_MAX]
         self.save()
 
-    def save(self):
-        with open(path, "w", encoding="utf-8") as f:
-            for url in self.urls:
-                f.write(url + '\n')
-
 
 def getSingerURL(crawl=False):
     if crawl:
         crawler = URLCrawler()
         crawler.crawl()
     with open(path, 'r', encoding='utf-8') as f:
-        urls = [url.strip() for url in f.readlines()]
+        urls = json.load(f)
         return urls
     
 
 if __name__ == '__main__':
     urls = getSingerURL(crawl=True)
     print(len(urls))
+    print(urls)
