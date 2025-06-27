@@ -115,10 +115,14 @@ def getSingerInfo(idx, crawl=False):
         crawler = SingerCrawler()
         crawler.login()
         crawler.crawl()
-    path = os.path.join(json_dir, f'singer{idx}.json')
+    file_id = idx // SINGER_BATCH_SIZE + 1
+    path = os.path.join(json_dir, f'singer{file_id}.json')
     with open(path, 'r', encoding='utf-8') as f:
         singers = json.load(f)
-        return singers
+        for singer in singers:
+            if singer['id'] == idx:
+                return singer
+        raise IndexError(f'没有以{idx}为id的歌手')
     
 
 def getSongURL(crawl=False):
@@ -142,9 +146,8 @@ def getSSEdge(crawl=False):
 
 
 if __name__ == '__main__':
-    singers = getSingerInfo(30, crawl=False)
-    for singer in singers:
-        print(singer['info_items'])
+    singer = getSingerInfo(0, crawl=False)
+    print(singer)
     song_urls = getSongURL(crawl=False)
     print(len(song_urls))
     ss_edges = getSSEdge(crawl=False)
