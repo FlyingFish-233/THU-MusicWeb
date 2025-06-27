@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}QQ音乐{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>我的音乐收藏</h1>
+    </header>
+    
+    <div class="container">
+        <div class="search-bar">
+            <input type="text" placeholder="搜索歌曲...">
+            <button>搜索</button>
+        </div>
+        
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

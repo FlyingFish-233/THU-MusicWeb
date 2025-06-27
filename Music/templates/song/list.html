@@ -1,0 +1,23 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}歌曲列表{% endblock %}
+
+{% block content %}
+<div class="song-list">
+    <div class="song-header">
+        <div>#</div>
+        <div>歌曲名称</div>
+        <div>歌手</div>
+        <div>简介</div>
+    </div>
+    {% for song in songs %}
+        <div class="song">
+            <div>{{ song.id }}</div>
+            <div>{{ song.name }}</div>
+            <div>{{ song.singer_name }}</div>
+            <div>{{ song.description }}</div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
