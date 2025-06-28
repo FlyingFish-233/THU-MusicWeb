@@ -1,0 +1,50 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}{{ song.name }} - QQ音乐{% endblock %}
+
+{% block content %}
+<div class="song-detail">
+    <div class="song-header">
+        <div class="song-image"><img src="{% static song.img_path %}"></div>
+        <div class="song-name">{{ song.name }}</div>
+    </div>
+
+    <div class="song-addition">
+        <div class="song-url">
+            <a href="{{ song.url }}" target="_blank">{{ song.url }}</a>
+        </div>
+        <div class="song-info-items">{{ song.info_items }}</div>
+        <div class="song-singer-name">{{ song.singer_name }}</div>
+    </div>
+
+    <div class="song-lyric">
+        {{ song.lyric }}
+    </div>
+
+    <div class="song-description">
+        {% if song.description|length > 2000 %}
+            {{ song.description|slice:":2000" }}...
+        {% else %}
+            {{ song.description }}
+        {% endif %}
+    </div>
+
+    <div class="song-singer-list">
+        {% for singer in song.singers.all %}
+            <div class="song-singer-item">
+                <div>{{ singer.id }}</div>
+                <div><img src="{% static singer.img_path %}"></div>
+                <div>{{ singer.name }}</div>
+                <div>
+                    {% if singer.description|length > 100 %}
+                        {{ singer.description|slice:":100" }}...
+                    {% else %}
+                        {{ singer.description }}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

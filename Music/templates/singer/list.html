@@ -1,0 +1,26 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}歌手列表{% endblock %}
+
+{% block content %}
+<div class="singer-list">
+    <div class="singer-list-header">
+        <div>歌曲列表</div>
+    </div>
+    {% for singer in singers %}
+        <div class="singer-list-item">
+            <div>{{ singer.id }}</div>
+            <div><img src="{% static singer.img_path %}"></div>
+            <div>{{ singer.name }}</div>
+            <div>
+                {% if singer.description|length > 100 %}
+                    {{ singer.description|slice:":100" }}...
+                {% else %}
+                    {{ singer.description }}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

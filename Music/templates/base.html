@@ -6,18 +6,24 @@
     <title>{% block title %}QQ音乐{% endblock %}</title>
 </head>
 <body>
-    <header>
-        <h1>我的音乐收藏</h1>
-    </header>
-    
-    <div class="container">
-        <div class="search-bar">
+    <div class="header">
+        <div class="header-web-name">我的音乐收藏</div>
+        <div class="header-song-list">歌曲列表</div>
+        <div class="header-singer-list">歌手列表</div>
+        <div class="header-search-bar">
             <input type="text" placeholder="搜索歌曲...">
             <button>搜索</button>
         </div>
-        
+    </div>
+    
+    <div class="container">
         {% block content %}
         {% endblock %}
+    </div>
+
+    <div class="footer">
+        <div class="footer-author">made by zwx</div>
+        <div class="footer-github-url">github.io</div>
     </div>
 </body>
 </html>
