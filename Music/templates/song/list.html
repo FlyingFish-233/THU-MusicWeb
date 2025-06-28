@@ -14,6 +14,7 @@
     {% for song in songs %}
         <div class="song">
             <div>{{ song.id }}</div>
+            <div><img src="{% static song.img_path %}"></div>
             <div>{{ song.name }}</div>
             <div>{{ song.singer_name }}</div>
             <div>{{ song.description }}</div>
