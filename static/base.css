@@ -1,0 +1,132 @@
+/*
+#abedd8
+#46cdcf
+#3d84a8
+#48466d
+*/
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0; /*外边距*/
+    padding: 0; /*内边距*/
+    background-color: #f5f5f5;
+    color: #48466d;
+    line-height: 1.6;
+}
+
+.header {
+    background: linear-gradient(to right, #46cdcf, #3d84a8);
+    padding: 1rem 4rem;
+    display: flex; /*flex布局中默认为flex-direction: row*/
+    align-items: center; /*交叉轴对齐方式*/
+    justify-content: space-between; /*主轴对齐方式*/
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+.header-web-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+}
+
+.header-song-list,
+.header-singer-list {
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.header-song-list:hover,
+.header-singer-list:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.header-search-bar {
+    display: flex;
+    align-items: center;
+}
+
+.header-search-bar input {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+}
+
+.header-search-bar button {
+    padding: 0.5rem 1rem;
+    background-color: #48466d;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.header-search-bar button:hover {
+    background-color: #3d3a5f;
+}
+
+/* Container Styles */
+.container {
+    min-height: calc(100vh - 120px);
+    padding: 2rem;
+    background-color: white;
+    margin: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Footer Styles */
+.footer {
+    background-color: #48466d;
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-author {
+    font-size: 0.9rem;
+}
+
+.footer-github-url {
+    color: #abedd8;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-github-url:hover {
+    color: #46cdcf;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .header-web-name {
+        margin-bottom: 1rem;
+    }
+
+    .header-search-bar {
+        margin-top: 1rem;
+        width: 100%;
+    }
+
+    .header-search-bar input {
+        flex-grow: 1;
+    }
+
+    .container {
+        margin: 0.5rem;
+        padding: 1rem;
+    }
+}

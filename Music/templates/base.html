@@ -1,9 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"> <!-- 强制IE使用最新的模式来渲染页面 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 网页设置为设备的屏幕宽度，初始缩放比为1 -->
     <title>{% block title %}QQ音乐{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'base.css' %}">
 </head>
 <body>
     <div class="header">
