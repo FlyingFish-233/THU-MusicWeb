@@ -8,8 +8,8 @@
 <body>
     <div class="header">
         <div class="header-web-name">我的音乐收藏</div>
-        <div class="header-song-list">歌曲列表</div>
-        <div class="header-singer-list">歌手列表</div>
+        <div class="header-song-list" onclick="window.location.href='{% url 'song' %}';">歌曲列表</div>
+        <div class="header-singer-list" onclick="window.location.href='{% url 'singer' %}';">歌手列表</div>
         <div class="header-search-bar">
             <input type="text" placeholder="搜索歌曲...">
             <button>搜索</button>

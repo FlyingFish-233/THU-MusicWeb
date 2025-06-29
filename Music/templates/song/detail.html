@@ -32,7 +32,7 @@
 
     <div class="song-singer-list">
         {% for singer in song.singers.all %}
-            <div class="song-singer-item">
+            <div class="song-singer-item" onclick="window.location.href='{% url 'singer_detail' id=singer.id  %}';">
                 <div>{{ singer.id }}</div>
                 <div><img src="{% static singer.img_path %}"></div>
                 <div>{{ singer.name }}</div>

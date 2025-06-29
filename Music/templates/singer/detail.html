@@ -27,7 +27,7 @@
 
     <div class="singer-song-list">
         {% for song in singer.songs.all %}
-            <div class="singer-song-item">
+            <div class="singer-song-item" onclick="window.location.href='{% url 'song_detail' id=song.id  %}';">
                 <div>{{ song.id }}</div>
                 <div><img src="{% static song.img_path %}"></div>
                 <div>{{ song.name }}</div>

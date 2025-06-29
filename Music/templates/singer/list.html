@@ -6,10 +6,10 @@
 {% block content %}
 <div class="singer-list">
     <div class="singer-list-header">
-        <div>歌曲列表</div>
+        <div>歌手列表</div>
     </div>
     {% for singer in singers %}
-        <div class="singer-list-item">
+        <div class="singer-list-item" onclick="window.location.href='{% url 'singer_detail' id=singer.id  %}';">
             <div>{{ singer.id }}</div>
             <div><img src="{% static singer.img_path %}"></div>
             <div>{{ singer.name }}</div>
