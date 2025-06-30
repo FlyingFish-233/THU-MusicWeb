@@ -19,44 +19,48 @@ body {
     padding: 1rem 4rem;
     display: flex; /*flex布局中默认为flex-direction: row*/
     align-items: center; /*交叉轴对齐方式*/
-    justify-content: space-between; /*主轴对齐方式*/
+    gap: 1.5rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     color: white;
 }
 
 .header-web-name {
+    flex-shrink: 0; /* 禁止压缩 */
     font-size: 1.8rem;
     font-weight: bold;
     color: white;
 }
 
-.header-song-list,
-.header-singer-list {
+.header-song,
+.header-singer {
+    flex-shrink: 0;
     padding: 0.5rem 1rem;
     margin: 0 0.5rem;
     cursor: pointer;
     border-radius: 4px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s; /*背景颜色变化时以0.3s完成渐变*/
 }
 
-.header-song-list:hover,
-.header-singer-list:hover {
+.header-song:hover,
+.header-singer:hover {
     background-color: rgba(255, 255, 255, 0.2);
 }
 
 .header-search-bar {
     display: flex;
     align-items: center;
+    width: 30%;
 }
 
 .header-search-bar input {
+    flex-grow: 1; /* 分配剩余空间 */
     padding: 0.5rem;
     border: none;
-    border-radius: 4px 0 0 4px;
     outline: none;
 }
 
 .header-search-bar button {
+    flex-shrink: 0;
     padding: 0.5rem 1rem;
     background-color: #48466d;
     color: white;
@@ -69,6 +73,53 @@ body {
 .header-search-bar button:hover {
     background-color: #3d3a5f;
 }
+
+.header-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center; 
+}
+
+.header-select-wrapper select {
+    padding: 0.5rem 1.5rem 0.5rem 0.5rem;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    background-color: #48466d;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+    -webkit-appearance: none; /* 移除默认的箭头样式 */
+    -moz-appearance: none;
+    appearance: none;
+    position: relative;
+    z-index: 1;
+}
+
+.header-select-wrapper select:hover {
+    background-color: #3d3a5f;
+}
+
+.header-select-wrapper::after {
+    content: "▼";
+    font-size: 0.6rem;
+    color: white;
+    position: absolute;
+    right: 8px;
+    pointer-events: none;
+    z-index: 2;
+}
+
+option {
+    color: white;
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+option:hover {
+    background-color: #3d3a5f;
+}
+
 
 /* Container Styles */
 .container {
@@ -118,7 +169,7 @@ body {
 
     .header-search-bar {
         margin-top: 1rem;
-        width: 100%;
+        width: 60%;
     }
 
     .header-search-bar input {

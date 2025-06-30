@@ -5,15 +5,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge"> <!-- 强制IE使用最新的模式来渲染页面 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 网页设置为设备的屏幕宽度，初始缩放比为1 -->
-    <title>{% block title %}QQ音乐{% endblock %}</title>
+    <title>{% block title %}QQ音乐收藏{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'base.css' %}">
 </head>
 <body>
     <div class="header">
-        <div class="header-web-name">我的音乐收藏</div>
-        <div class="header-song-list" onclick="window.location.href='{% url 'song' %}';">歌曲列表</div>
-        <div class="header-singer-list" onclick="window.location.href='{% url 'singer' %}';">歌手列表</div>
+        <div class="header-web-name">QQ音乐收藏</div>
+        <div class="header-song" onclick="window.location.href='{% url 'song' %}';">歌曲列表</div>
+        <div class="header-singer" onclick="window.location.href='{% url 'singer' %}';">歌手列表</div>
         <div class="header-search-bar">
+            <div class="header-select-wrapper">
+                <select>
+                    <option value="song">歌曲</option>
+                    <option value="singer">歌手</option>
+                </select>
+            </div>
             <input type="text" placeholder="搜索歌曲...">
             <button>搜索</button>
         </div>
