@@ -1,26 +1,79 @@
-{% extends '../base.html' %}
+{% extends '../list.html' %}
 {% load static %}
 
 {% block title %}歌手列表{% endblock %}
 
-{% block content %}
-<div class="singer-list">
-    <div class="singer-list-header">
-        <div>歌手列表</div>
-    </div>
+{% block hero_title %}
+    {% if page_obj.number > 1 %}
+        歌手列表
+    {% else %}
+        发现你喜欢的歌手
+    {% endif %}
+{% endblock %}
+
+{% block hero_subtitle %}
+    {% if page_obj.number > 1 %}
+        ————————————  第{{ page_obj.number }}页  ————————————
+    {% else %}
+        收藏超过300个超级歌手，每日更新
+    {% endif %}
+{% endblock %}
+
+
+{% block main_list %}
+
+<style>
+    .singer-card {
+        transition: transform 0.3s;
+        margin-bottom: 20px;
+    }
+    .singer-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .card-img-cover {
+        height: 250px;
+        object-fit: cover;
+    }
+     .card-footer {
+        padding: 0.75rem 1rem;
+        border-top: 1px solid rgba(0,0,0,0.1);
+        height: 90px; /* 固定高度 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    /* 三行文本限制 */
+    .card-footer small {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.4; /* 调整行高 */
+        max-height: calc(1.4em * 3); /* 3行高度 */
+        margin: 0;
+    }
+</style>
+
+<!-- 歌手卡片 -->
+<div class="row">
     {% for singer in singers %}
-        <div class="singer-list-item" onclick="window.location.href='{% url 'singer_detail' id=singer.id  %}';">
-            <div>{{ singer.id }}</div>
-            <div><img src="{% static singer.img_path %}"></div>
-            <div>{{ singer.name }}</div>
-            <div>
-                {% if singer.description|length > 100 %}
-                    {{ singer.description|slice:":100" }}...
-                {% else %}
-                    {{ singer.description }}
-                {% endif %}
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+        <div class="card singer-card h-100" onclick="window.location.href='{% url 'singer_detail' id=singer.id  %}';">
+            <img src="{% static singer.img_path %}" class="card-img-top card-img-cover" alt="{{ singer.name }}封面">
+            
+            <div class="card-body">
+                <h5 class="card-title">{{ singer.name }}</h5>
+            </div>
+            
+            <div class="card-footer bg-white">
+                <small class="text-muted">{{ singer.description|slice:":100" }}</small>
             </div>
         </div>
+    </div>
     {% endfor %}
 </div>
+
 {% endblock %}
