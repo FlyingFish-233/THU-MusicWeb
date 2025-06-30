@@ -9,8 +9,11 @@
     <!-- Font Awesome 图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .footer {
+        body {
             background-color: #f8f9fa;
+        }
+        .footer {
+            background-color: #e9ecef;
             padding: 40px 0;
         }
     </style>
@@ -31,7 +34,7 @@
                         <a class="nav-link" href="{% url 'home' %}">首页</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'song' %}">歌曲列表</a>
+                        <a class="nav-link" href="{% url 'song' %}">歌曲列表</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'singer' %}">歌手列表</a>
@@ -59,7 +62,7 @@
     </nav>
 
     <!-- 英雄区域 -->
-    {% block hero_section %}
+    {% block header %}
     {% endblock %}
 
     <!-- 主要内容区 -->
