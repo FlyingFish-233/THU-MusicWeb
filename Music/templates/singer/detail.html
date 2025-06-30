@@ -3,43 +3,156 @@
 
 {% block title %}{{ singer.name }} - QQ音乐{% endblock %}
 
-{% block content %}
-<div class="singer-detail">
-    <div class="singer-header">
-        <div class="singer-image"><img src="{% static singer.img_path %}"></div>
-        <div class="singer-name">{{ singer.name }}</div>
-    </div>
+{% block header %}
+<style>
+    .singer-header {
+        background: linear-gradient(135deg, #f5af19 0%, #f12711 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 20px 20px;
+    }
+    .singer-cover {
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        transition: transform 0.3s;
+    }
+    .song-cover:hover {
+        transform: scale(1.03);
+    }
+    .stats-badge {
+        background-color: rgba(255,255,255,0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+    }
+</style>
 
-    <div class="singer-addition">
-        <div class="singer-url">
-            <a href="{{ singer.url }}" target="_blank">{{ singer.url }}</a>
-        </div>
-        <div class="singer-info-items">{{ singer.info_items }}</div>
-    </div>
-
-    <div class="singer-description">
-        {% if singer.description|length > 2000 %}
-            {{ singer.description|slice:":2000" }}...
-        {% else %}
-            {{ singer.description }}
-        {% endif %}
-    </div>
-
-    <div class="singer-song-list">
-        {% for song in singer.songs.all %}
-            <div class="singer-song-item" onclick="window.location.href='{% url 'song_detail' id=song.id  %}';">
-                <div>{{ song.id }}</div>
-                <div><img src="{% static song.img_path %}"></div>
-                <div>{{ song.name }}</div>
-                <div>
-                    {% if song.description|length > 100 %}
-                        {{ song.description|slice:":100" }}...
-                    {% else %}
-                        {{ song.description }}
-                    {% endif %}
+<!-- 歌手头部信息 -->
+<header class="singer-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-4 text-center text-md-start mb-4 mb-md-0">
+                <img src="{% static singer.img_path %}" alt="{{ singer.name }}" class="img-fluid singer-cover">
+            </div>
+            <div class="col-md-8">
+                <h1 class="display-4 fw-bold mb-4">{{ singer.name }}</h1>
+                <div class="d-flex flex-wrap mt-4">
+                    <span class="stats-badge"><i class="fas fa-music me-1"></i> 歌曲 962</span>
+                    <span class="stats-badge"><i class="fas fa-compact-disc me-1"></i> 专辑 15</span>
+                    <span class="stats-badge"><i class="fas fa-users me-1"></i> 粉丝 2500万</span>
+                    <span class="stats-badge"><i class="fas fa-trophy me-1"></i> 奖项 350+</span>
+                </div>
+                <div class="mt-3">
+                    <span class="text-white-75 me-2"><i class="fas fa-link me-1"></i> 原始URL:</span>
+                    <a href="{{ singer.url }}" target="_blank" class="text-white text-decoration-none fw-semibold">
+                        {{ singer.url }}
+                    </a>
                 </div>
             </div>
-        {% endfor %}
+        </div>
+    </div>
+</header>
+
+{% endblock %}
+
+
+{% block content %}
+<style>
+    .info-card {
+        background-color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+    }
+    .album-card {
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.3s;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .album-card:hover {
+        transform: translateY(-5px);
+    }
+    .card-img-cover {
+        border-radius: 10px 10px 0 0;
+        height: 160px;
+        object-fit: cover;
+    }
+</style>
+
+<div class="row">
+    <!-- 左侧歌手简介 -->
+    <div class="col-lg-8">
+        <section class="info-card">
+            <h3 class="mb-4"><i class="fas fa-user me-2"></i>歌手简介</h3>
+            <div class="card-text">
+                {% if singer.description|length <= 1000 %}
+                    <p>{{ singer.description }}</p>
+                {% else %}
+                    <p id="short-description">
+                        {{ singer.description|slice:":1000" }}...
+                    </p>
+                    <div class="collapse" id="singerIntroCollapse">
+                        <p>
+                            {{ singer.description }}
+                        </p>
+                    </div>
+                    <a class="text-primary toggle-link text-decoration-none" data-bs-toggle="collapse" href="#singerIntroCollapse" role="button">
+                        <span class="collapsed">展开更多</span>
+                        <span class="expanded" style="display:none;">收起</span>
+                    </a>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <!-- 右侧代表作品 -->
+    <div class="col-lg-4">
+        <section class="info-card">
+            <h3 class="mb-4"><i class="fas fa-star me-2"></i>代表作品</h3>
+            <div class="row">
+                {% for song in singer.songs.all %}
+                    <div class="col-md-6" >
+                        <div class="card album-card" onclick="window.location.href='{% url 'song_detail' id=song.id  %}';">
+                            <img src="{% static song.img_path %}" class="card-img-top card-img-cover" alt="{{ song.name }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ song.name }}</h5>
+                                <p class="card-text text-muted">{{ song.singer_name }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var collapseElement = document.getElementById('singerIntroCollapse');
+    var toggleLink = document.querySelector('a[href="#singerIntroCollapse"]');
+    var short_desc = document.getElementById('short-description');
+    
+    if (collapseElement && toggleLink && short_desc) {
+        collapseElement.addEventListener('show.bs.collapse', function() {
+            toggleLink.querySelector('.collapsed').style.display = 'none';
+            toggleLink.querySelector('.expanded').style.display = 'inline';
+            short_desc.style.display = 'none';
+        });
+        
+        collapseElement.addEventListener('hide.bs.collapse', function() {
+            toggleLink.querySelector('.collapsed').style.display = 'inline';
+            toggleLink.querySelector('.expanded').style.display = 'none';
+            short_desc.style.display = 'block';
+        });
+    }
+});
+</script>
+
 {% endblock %}

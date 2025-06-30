@@ -4,92 +4,93 @@
 {% block title %}{{ song.name }} - QQ音乐{% endblock %}
 
 {% block header %}
-    <style>
-        .song-header {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            padding: 3rem 0;
-            margin-bottom: 2rem;
-            border-radius: 0 0 20px 20px;
-        }
-        .song-cover {
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
-        }
-        .song-cover:hover {
-            transform: scale(1.03);
-        }
-    </style>
+<style>
+    .song-header {
+        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+        color: white;
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        border-radius: 0 0 20px 20px;
+    }
+    .song-cover {
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        transition: transform 0.3s;
+    }
+    .song-cover:hover {
+        transform: scale(1.03);
+    }
+    .stats-badge {
+        background-color: rgba(255,255,255,0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+        display: inline-flex;
+        align-items: center;
+    }
+</style>
 
-    <!-- 歌曲头部信息 -->
-    <header class="song-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-4 text-center text-md-start mb-4 mb-md-0">
-                    <img src="{% static song.img_path %}" alt="{{ song.url }}" class="img-fluid song-cover">
+<!-- 歌曲头部信息 -->
+<header class="song-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-4 text-center text-md-start mb-4 mb-md-0">
+                <img src="{% static song.img_path %}" alt="{{ song.name }}" class="img-fluid song-cover">
+            </div>
+            <div class="col-md-8">
+                <h1 class="display-4 fw-bold mb-4">{{ song.name }}</h1>
+                <p class="lead">{{ song.singer_name }}</p>
+                <div class="d-flex flex-wrap mt-4">
+                    <span class="stats-badge"><i class="fas fa-music me-1"></i> 单曲 962</span>
+                    <span class="stats-badge"><i class="fas fa-compact-disc me-1"></i> 专辑 40</span>
+                    <span class="stats-badge"><i class="fas fa-video me-1"></i> MV 10528</span>
                 </div>
-                <div class="col-md-8">
-                    <h1 class="display-4 fw-bold mb-4">{{ song.name }}</h1>
-                    <p class="lead">{{ song.singer_name }}</p>
-                    <div class="d-flex flex-wrap mt-4">
-                        <span class="stats-badge"><i class="fas fa-music me-1"></i> 单曲 962</span>
-                        <span class="stats-badge"><i class="fas fa-compact-disc me-1"></i> 专辑 40</span>
-                        <span class="stats-badge"><i class="fas fa-video me-1"></i> MV 10528</span>
-                    </div>
-                    <div class="mt-3">
-                        <span class="text-white-75 me-2"><i class="fas fa-link me-1"></i> 原始URL:</span>
-                        <a href="{{ song.url }}" target="_blank" class="text-white text-decoration-none fw-semibold">
-                            {{ song.url }}
-                        </a>
-                    </div>
+                <div class="mt-3">
+                    <span class="text-white-75 me-2"><i class="fas fa-link me-1"></i> 原始URL:</span>
+                    <a href="{{ song.url }}" target="_blank" class="text-white text-decoration-none fw-semibold">
+                        {{ song.url }}
+                    </a>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
 {% endblock %}
 
 
 {% block content %}
+<style>
+    .lyrics-container {
+        background-color: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+    }
+    .lyrics {
+        white-space: pre-line;
+        line-height: 2;
+        font-family: 'Noto Sans SC', sans-serif;
+    }
+    .song-info-card {
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+    }
+    .singer-card {
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.3s;
+        margin-bottom: 1rem;
+    }
+    .singer-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+
 <div class="row">
-    <style>
-        .lyrics-container {
-            background-color: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-        }
-        .lyrics {
-            white-space: pre-line;
-            line-height: 2;
-            font-family: 'Noto Sans SC', sans-serif;
-        }
-        .song-info-card {
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-        }
-        .singer-card {
-            border: none;
-            border-radius: 10px;
-            transition: transform 0.3s;
-            margin-bottom: 1rem;
-        }
-        .singer-card:hover {
-            transform: translateY(-5px);
-        }
-        .stats-badge {
-            background-color: rgba(255,255,255,0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            margin-right: 0.5rem;
-            margin-bottom: 0.5rem;
-            display: inline-flex;
-            align-items: center;
-        }
-    </style>
     <!-- 左侧歌词部分 -->
     <div class="col-lg-8">
         <section class="lyrics-container">
@@ -150,27 +151,29 @@
                 </div>
             </div>
         </section>
-        <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var collapseElement = document.getElementById('songIntroCollapse');
-            var toggleLink = document.querySelector('a[href="#songIntroCollapse"]');
-            var short_desc = document.getElementById('short-description');
-            
-            if (collapseElement && toggleLink && short_desc) {
-                collapseElement.addEventListener('show.bs.collapse', function() {
-                    toggleLink.querySelector('.collapsed').style.display = 'none';
-                    toggleLink.querySelector('.expanded').style.display = 'inline';
-                    short_desc.style.display = 'none';
-                });
-                
-                collapseElement.addEventListener('hide.bs.collapse', function() {
-                    toggleLink.querySelector('.collapsed').style.display = 'inline';
-                    toggleLink.querySelector('.expanded').style.display = 'none';
-                    short_desc.style.display = 'block';
-                });
-            }
-        });
-        </script>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var collapseElement = document.getElementById('songIntroCollapse');
+    var toggleLink = document.querySelector('a[href="#songIntroCollapse"]');
+    var short_desc = document.getElementById('short-description');
+    
+    if (collapseElement && toggleLink && short_desc) {
+        collapseElement.addEventListener('show.bs.collapse', function() {
+            toggleLink.querySelector('.collapsed').style.display = 'none';
+            toggleLink.querySelector('.expanded').style.display = 'inline';
+            short_desc.style.display = 'none';
+        });
+        
+        collapseElement.addEventListener('hide.bs.collapse', function() {
+            toggleLink.querySelector('.collapsed').style.display = 'inline';
+            toggleLink.querySelector('.expanded').style.display = 'none';
+            short_desc.style.display = 'block';
+        });
+    }
+});
+</script>
+
 {% endblock %}
