@@ -1,21 +1,40 @@
 {% extends '../list.html' %}
 {% load static %}
 
-{% block title %}歌手列表{% endblock %}
+{% block title %}
+    {% if query %}
+        “{{query}}” 的歌手搜索结果
+    {% else %}
+        歌手列表
+    {% endif %}
+
+{% endblock %}
 
 {% block hero_title %}
-    {% if page_obj.number > 1 %}
-        歌手列表
+    {% if query %}
+        “{{query}}” 的搜索结果
     {% else %}
-        发现你喜欢的歌手
+        {% if page_obj.number > 1 %}
+            歌手列表
+        {% else %}
+            发现你喜欢的歌手
+        {% endif %}
     {% endif %}
 {% endblock %}
 
 {% block hero_subtitle %}
-    {% if page_obj.number > 1 %}
-        ————————————  第{{ page_obj.number }}页  ————————————
+    {% if query %}
+        {% if page_obj.number > 1 %}
+            ———————————— 共搜到 {{ singers_num }} 位歌手，第{{ page_obj.number }}页  ————————————
+        {% else %}
+            ———————————— 共搜到 {{ singers_num }} 位歌手，用时：{{ search_time }}  ————————————
+        {% endif %}
     {% else %}
-        收藏超过300个超级歌手，每日更新
+        {% if page_obj.number > 1 %}
+            ————————————  第{{ page_obj.number }}页  ————————————
+        {% else %}
+            共收藏 {{ singers_num }} 位优秀歌手，每日更新
+        {% endif %}
     {% endif %}
 {% endblock %}
 

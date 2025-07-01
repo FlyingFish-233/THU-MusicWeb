@@ -2,23 +2,45 @@ from Music.models import Singer, Song, Comment
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib import messages
-from django.urls import reverse
+from django.db.models import Q
+import time
 
 LIST_NUM = 20
 
 def song_list(request):
+    query = request.GET.get('q', '')
     page_number = request.GET.get('page', 1)
+
+    start_time = time.time()
+
+    if not query or len(query) > 20:
+        songs = Song.objects.all().order_by('id')
+        page_base_url = f'song?page='
+    else:
+        songs = Song.objects.filter(
+            Q(name__icontains=query) |
+            Q(singer_name__icontains=query) |
+            Q(lyric__icontains=query)
+        ).distinct().order_by('id')
+        page_base_url = f'song?q={query}&page='
+
+    paginator = Paginator(songs, LIST_NUM)
     try:
-        all_songs = Song.objects.all().order_by('id')
-        paginator = Paginator(all_songs, LIST_NUM)
         page_obj = paginator.page(page_number)
-        context = {
-            'songs': page_obj.object_list,
-            'page_obj': page_obj,
-        }
-        return render(request, "song/list.html", context)
     except EmptyPage:
-        return redirect('/song')
+        return redirect('song')
+    
+    end_time = time.time()
+    
+    context = {
+        'songs': page_obj.object_list,
+        'page_obj': page_obj,
+        'query': query,
+        'page_base_url': page_base_url,
+        'songs_num': songs.count(),
+        'search_time': f'{end_time - start_time:.4f}s'
+    }
+    return render(request, "song/list.html", context)
 
 
 def song_detail(request, id):
@@ -30,20 +52,38 @@ def song_detail(request, id):
     }
     return render(request, "song/detail.html", context)
 
-
 def singer_list(request):
+    query = request.GET.get('q', '')
     page_number = request.GET.get('page', 1)
+    start_time = time.time()
+
+    if not query or len(query) > 20:
+        singers = Singer.objects.all().order_by('id')
+        page_base_url = f'singer?page='
+    else:
+        singers = Singer.objects.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query)
+        ).distinct().order_by('id')
+        page_base_url = f'singer?q={query}&page='
+
+    paginator = Paginator(singers, LIST_NUM)
     try:
-        all_singers = Singer.objects.all().order_by('id')
-        paginator = Paginator(all_singers, LIST_NUM)
         page_obj = paginator.page(page_number)
-        context = {
-            'singers': page_obj.object_list,
-            'page_obj': page_obj,
-        }
-        return render(request, "singer/list.html", context)
     except EmptyPage:
-        return redirect('/singer')
+        return redirect('singer')
+    
+    end_time = time.time()
+    
+    context = {
+        'singers': page_obj.object_list,
+        'page_obj': page_obj,
+        'query': query,
+        'page_base_url': page_base_url,
+        'singers_num': singers.count(),
+        'search_time': f'{end_time - start_time:.4f}s'
+    }
+    return render(request, "singer/list.html", context)
 
 
 def singer_detail(request, id):
@@ -73,4 +113,5 @@ def comment(request, id):
                 comment_content=comment_content
             )
             messages.success(request, "评论发布成功！")
-    return redirect(reverse('song_detail', kwargs={'id': id}) + '#commentMainBlock')
+
+    return redirect(f'song/detail/{id}#commentMainBlock')

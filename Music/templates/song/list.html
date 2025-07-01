@@ -1,21 +1,40 @@
 {% extends '../list.html' %}
 {% load static %}
 
-{% block title %}歌曲列表{% endblock %}
+{% block title %}
+    {% if query %}
+        “{{query}}” 的歌曲搜索结果
+    {% else %}
+        歌曲列表
+    {% endif %}
+
+{% endblock %}
 
 {% block hero_title %}
-    {% if page_obj.number > 1 %}
-        歌曲列表
+    {% if query %}
+        “{{query}}” 的搜索结果
     {% else %}
-        发现你喜欢的音乐
+        {% if page_obj.number > 1 %}
+            歌曲列表
+        {% else %}
+            发现你喜欢的音乐
+        {% endif %}
     {% endif %}
 {% endblock %}
 
 {% block hero_subtitle %}
-    {% if page_obj.number > 1 %}
-        ————————————  第{{ page_obj.number }}页  ————————————
+    {% if query %}
+        {% if page_obj.number > 1 %}
+        ———————————— 共搜到 {{ songs_num }} 首歌曲，第{{ page_obj.number }}页  ————————————
+        {% else %}
+        ———————————— 共搜到 {{ songs_num }} 首歌曲，用时：{{ search_time }}  ————————————
+        {% endif %}
     {% else %}
-        收藏超过10,000首优质歌曲，每日更新
+        {% if page_obj.number > 1 %}
+            ————————————  第{{ page_obj.number }}页  ————————————
+        {% else %}
+            共收藏 {{ songs_num }} 首优质歌曲，每日更新
+        {% endif %}
     {% endif %}
 {% endblock %}
 

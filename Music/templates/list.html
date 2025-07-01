@@ -14,7 +14,7 @@
 <section class="hero-section text-center">
     <div class="container">
         <h1 class="display-4 fw-bold">{% block hero_title %}{% endblock %}</h1>
-        <p class="lead">{% block hero_subtitle %}{% endblock %}</p>
+        <p class="lead mt-4">{% block hero_subtitle %}{% endblock %}</p>
         <div class="mt-4">
             <button class="btn btn-light btn-lg me-2">热门榜单</button>
             <button class="btn btn-outline-light btn-lg">随机推荐</button>
@@ -68,12 +68,12 @@
 <nav aria-label="Page navigation" class="mt-5">
     <ul class="pagination justify-content-center">
         <!-- 首页 -->
-        <li class="page-item"><a class="page-link" href="?page=1">首页</a></li>
+        <li class="page-item"><a class="page-link" href="{{ page_base_url }}1">首页</a></li>
 
         <!-- 上一页 -->
         {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">上一页</a>
+                <a class="page-link" href="{{ page_base_url }}{{ page_obj.previous_page_number }}">上一页</a>
             </li>
         {% endif %}
 
@@ -87,29 +87,29 @@
         {# 当前页附近的页码（动态渲染） #}
         {% if page_obj.number|add:'-2' >= 1 %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.number|add:'-2' }}">{{ page_obj.number|add:'-2' }}</a>
+                <a class="page-link" href="{{ page_base_url }}{{ page_obj.number|add:'-2' }}">{{ page_obj.number|add:'-2' }}</a>
             </li>
         {% endif %}
 
         {% if page_obj.number|add:'-1' >= 1 %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.number|add:'-1' }}">{{ page_obj.number|add:'-1' }}</a>
+                <a class="page-link" href="{{ page_base_url }}{{ page_obj.number|add:'-1' }}">{{ page_obj.number|add:'-1' }}</a>
             </li>
         {% endif %}
         
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a>
+        <li class="page-item active">
+            <a class="page-link" href="{{ page_base_url }}{{ page_obj.number }}">{{ page_obj.number }}</a>
         </li>
 
         {% if page_obj.number|add:'1' <= page_obj.paginator.num_pages %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.number|add:'1' }}">{{ page_obj.number|add:'1' }}</a>
+                <a class="page-link" href="{{ page_base_url }}{{ page_obj.number|add:'1' }}">{{ page_obj.number|add:'1' }}</a>
             </li>
         {% endif %}
 
         {% if page_obj.number|add:'2' <= page_obj.paginator.num_pages %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.number|add:'2' }}">{{ page_obj.number|add:'2' }}</a>
+                <a class="page-link" href="{{ page_base_url }}{{ page_obj.number|add:'2' }}">{{ page_obj.number|add:'2' }}</a>
             </li>
         {% endif %}
 
@@ -123,12 +123,12 @@
         <!-- 下一页 -->
         {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">下一页</a>
+                <a class="page-link" href="{{ page_base_url }}{{ page_obj.next_page_number }}">下一页</a>
             </li>
         {% endif %}
 
         <!-- 末页 -->
-        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">末页</a></li>
+        <li class="page-item"><a class="page-link" href="{{ page_base_url }}{{ page_obj.paginator.num_pages }}">末页</a></li>
     </ul>
 </nav>
 {% endblock %}
