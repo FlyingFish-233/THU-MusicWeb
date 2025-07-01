@@ -1,66 +1,33 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}QQ音乐收藏{% endblock %}</title>
-    <!-- Bootstrap 5 CSS -->
+    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome 图标 -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .footer {
-            background-color: #e9ecef;
-            padding: 40px 0;
-        }
-        /* 回到顶部按钮样式 */
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 12px 20px;
-            border-radius: 30px;
-            background: #0d6efd;
-            color: white;
-            border: none;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            z-index: 999;
-            font-size: 16px;
-            font-weight: 500;
-        }
-        .back-to-top:hover {
-            background: #0b5ed7;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-        .back-to-top.show {
-            display: flex;
-        }
-        .back-to-top i {
-            margin-right: 8px;
-        }
-    </style>
-    </style>
+    <!-- 本地CSS文件 -->
+    <link rel="stylesheet" href="{% static 'base.css' %}">
 </head>
 <body>
     <!-- 导航栏 -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
         <div class="container">
+            <!-- 网站logo -->
             <a class="navbar-brand" href="{% url 'home' %}">
-                <i class="fas fa-music me-2"></i>音乐收藏
+                <i class="fas fa-cloud me-2"></i>音乐收藏
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <!-- 响应式折叠按钮（仅在小屏幕上显示） -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- 导航栏会折叠的部分 -->
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <!-- 导航菜单 -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'home' %}">首页</a>
@@ -71,24 +38,27 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'singer' %}">歌手列表</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            分类
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">流行</a></li>
-                            <li><a class="dropdown-item" href="#">摇滚</a></li>
-                            <li><a class="dropdown-item" href="#">电子</a></li>
-                            <li><a class="dropdown-item" href="#">古典</a></li>
-                        </ul>
-                    </li>
                 </ul>
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="搜索歌曲...">
-                    <button class="btn btn-outline-light" type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </form>
+                <!-- 搜索部分 -->
+                <div class="d-flex align-items-center">
+                    <!-- 搜索类型下拉框 -->
+                    <div class="dropdown me-2">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="searchTypeDropdown" data-bs-toggle="dropdown">
+                            搜索类型
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item search-type-item" href="#" data-type="singer">歌手</a></li>
+                            <li><a class="dropdown-item search-type-item" href="#" data-type="song">歌曲</a></li>
+                        </ul>
+                    </div>
+                    <!-- 搜索表单（输入框 + 按钮） -->
+                    <form class="d-flex" id="searchForm">
+                        <input class="form-control me-2" type="search" id="searchInput" placeholder="搜索歌曲..."required>
+                        <button class="btn btn-outline-light" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </nav>
@@ -163,25 +133,13 @@
 
     <!-- Bootstrap JS 和依赖 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'base.js' %}"></script>
     <script>
-        // 回到顶部功能
-        document.getElementById('backToTopBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
-        // 滚动显示/隐藏按钮
-        window.addEventListener('scroll', function() {
-            var btn = document.getElementById('backToTopBtn');
-            if (window.pageYOffset > 300) {
-                btn.classList.add('show');
-            } else {
-                btn.classList.remove('show');
-            }
-        });
+        // 将django的参数传给js
+        const DJANGO_URLS = {
+            singer: "{% url 'singer' %}",
+            song: "{% url 'song' %}",
+        };
     </script>
 </body>
 </html>
