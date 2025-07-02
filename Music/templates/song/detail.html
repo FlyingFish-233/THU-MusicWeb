@@ -42,9 +42,9 @@
                 <h1 class="display-4 fw-bold mb-4">{{ song.name }}</h1>
                 <p class="lead">{{ song.singer_name }}</p>
                 <div class="d-flex flex-wrap mt-4">
-                    <span class="stats-badge"><i class="fas fa-music me-1"></i> 单曲 962</span>
-                    <span class="stats-badge"><i class="fas fa-compact-disc me-1"></i> 专辑 40</span>
-                    <span class="stats-badge"><i class="fas fa-video me-1"></i> MV 10528</span>
+                    {% for key,value in song.info_items.items %}
+                        <span class="stats-badge"> {{ key }}：{{ value }}</span>
+                    {% endfor %}
                 </div>
                 <div class="mt-3">
                     <span class="text-white-75 me-2"><i class="fas fa-link me-1"></i> 原始URL:</span>
@@ -131,23 +131,8 @@
         <section class="song-info-card card mb-4">
             <div class="card-body">
                 <h3 class="card-title"><i class="fas fa-info-circle me-2"></i>歌曲介绍</h3>
-                <div class="card-text">
-                    {% if song.description|length <= 100 %}
-                        <p>{{ song.description }}</p>
-                    {% else %}
-                        <p id="short-description">
-                            {{ song.description|slice:":100" }}...
-                        </p>
-                        <div class="collapse" id="songIntroCollapse">
-                            <p>
-                                {{ song.description }}
-                            </p>
-                        </div>
-                        <a class="text-primary toggle-link text-decoration-none" data-bs-toggle="collapse" href="#songIntroCollapse" role="button">
-                            <span class="collapsed">展开更多</span>
-                            <span class="expanded" style="display:none;">收起</span>
-                        </a>
-                    {% endif %}
+                <div class="card-text" style="white-space: pre-line">
+                    {{ song.description }}
                 </div>
             </div>
         </section>
@@ -232,27 +217,5 @@
         }
     </style>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var collapseElement = document.getElementById('songIntroCollapse');
-    var toggleLink = document.querySelector('a[href="#songIntroCollapse"]');
-    var short_desc = document.getElementById('short-description');
-    
-    if (collapseElement && toggleLink && short_desc) {
-        collapseElement.addEventListener('show.bs.collapse', function() {
-            toggleLink.querySelector('.collapsed').style.display = 'none';
-            toggleLink.querySelector('.expanded').style.display = 'inline';
-            short_desc.style.display = 'none';
-        });
-        
-        collapseElement.addEventListener('hide.bs.collapse', function() {
-            toggleLink.querySelector('.collapsed').style.display = 'inline';
-            toggleLink.querySelector('.expanded').style.display = 'none';
-            short_desc.style.display = 'block';
-        });
-    }
-});
-</script>
 
 {% endblock %}

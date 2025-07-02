@@ -41,6 +41,10 @@ class SongCrawler(BaseCrawler):
         img_url = img_tag.get_attribute('src')
         img_path = os.path.join(img_dir, f'{id}.jpg')
         SongCrawler.download_image(img_url, img_path)
+
+        # 暂停0.5s
+        time.sleep(0.5)
+
         # 歌曲名字
         name_tag = self.driver.find_element(By.XPATH, '//h1[@class="data__name_txt"]')
         name = name_tag.get_attribute("textContent")
@@ -51,25 +55,29 @@ class SongCrawler(BaseCrawler):
         except NoSuchElementException:
             description = ""
         # 歌曲条目信息
-        info_items_tag = self.driver.find_element(By.XPATH, '//ul[@class="data__info"]')
-        info_items = info_items_tag.get_attribute("textContent")
+        info_item_tags = self.driver.find_elements(By.XPATH, '//li[@class="data_info__item_song"]')
+        info_items = {}
+        for info_item_tag in info_item_tags:
+            text = info_item_tag.get_attribute("textContent")
+            key, value = text.split('：', 1)
+            info_items[key] = value
+        # 评论数
+        comment_tag = self.driver.find_element(By.XPATH, '//*[@id="app"]/div/div[2]/div[1]/div/div[3]/a[4]/span')
+        comment_text = comment_tag.get_attribute("textContent")
+        comment_num = comment_text.split('(')[1][:-1]
+        info_items['评论'] = comment_num
         # 歌手名字
         singer_name_tag = self.driver.find_element(By.XPATH, '//div[@class="data__singer"]')
         singer_name = singer_name_tag.get_attribute("textContent")
         # 歌词
-        time.sleep(0.5)
-        lyric_tag = self.driver.find_element(By.XPATH, '//div[@class="lyric__cont_box"]')
-        lyric = lyric_tag.get_attribute("textContent")
-        if lyric == '暂无歌词':
-            time.sleep(2)
-            lyric_tag = self.driver.find_element(By.XPATH, '//div[@class="lyric__cont_box"]')
-            lyric = lyric_tag.get_attribute("textContent")
+        lyric_tags = self.driver.find_elements(By.XPATH, '//div[@class="lyric__cont_box"]/p/span')
+        lyric_list = [lyric_tag.get_attribute("textContent") for lyric_tag in lyric_tags]
         # 更新self.songs
         self.songs.append({
             'id':id,
             'name':name,
             'img_path': img_path,
-            'lyric': lyric,
+            'lyric': lyric_list,
             'description': description,
             'info_items':info_items,
             'url':url,
@@ -86,10 +94,12 @@ class SongCrawler(BaseCrawler):
     
 
     def crawl(self):
-        for i, url in enumerate(tqdm(self.urls, desc='爬取进度')):
-            self.crawl_song_page(url, i)
-            if (i + 1) % SONG_BATCH_SIZE == 0 or i == len(self.urls) - 1:
-                self.save(i // SONG_BATCH_SIZE + 1)
+        start_index = 1600
+        for i, url in enumerate(tqdm(self.urls[start_index:], desc='爬取进度')):
+            idx = start_index + i
+            self.crawl_song_page(url, idx)
+            if (idx + 1) % SONG_BATCH_SIZE == 0 or idx == len(self.urls) - 1:
+                self.save(idx // SONG_BATCH_SIZE + 1)
 
 
 def getSongInfo(idx, crawl=False):

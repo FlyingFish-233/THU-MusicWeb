@@ -60,14 +60,33 @@ class SingerCrawler(BaseCrawler):
         except NoSuchElementException:
             description = ""
         # 歌手条目信息
-        info_items_tag = self.driver.find_element(By.XPATH, '//ul[@class="mod_data_statistic"]')
-        info_items = info_items_tag.get_attribute("textContent")
+        info_item_tags = self.driver.find_elements(By.XPATH, '//li[contains(@class, "data_statistic__item")]/a')
+        info_items = {}
+        for info_item_tag in info_item_tags:
+            text = info_item_tag.get_attribute("title")
+            key, value = text.split(' ')
+            info_items[key] = value
+        # 粉丝数
+        subscribe_tag = self.driver.find_element(By.XPATH, '//a[@class="mod_btn"]/span')
+        subscribe = subscribe_tag.get_attribute("textContent")
+        info_items['关注'] = subscribe
+        # 歌手简介
+        try:
+            more_btn_tag = self.driver.find_element(By.XPATH, '//div[@class="data__desc"]/a')
+            more_btn_tag.click()
+            WebDriverWait(self.driver, WDW_LIM).until(
+                EC.presence_of_element_located((By.XPATH, '//div[@class="popup_data_detail__cont"]'))
+            )
+            description_tags = self.driver.find_elements(By.XPATH, '//div[@class="popup_data_detail__cont"]/p')
+            description_list = [description_tag.get_attribute("textContent") for description_tag in description_tags[3:]]
+        except NoSuchElementException:
+            description_list = []
         # 更新歌手列表
         self.singers.append({
             'id':id,
             'name':name,
             'img_path':img_path,
-            'description':description,
+            'description':description_list,
             'info_items':info_items,
             'url':url
         })
@@ -146,8 +165,8 @@ def getSSEdge(crawl=False):
 
 
 if __name__ == '__main__':
-    singer = getSingerInfo(0, crawl=False)
-    print(singer)
+    singer = getSingerInfo(299, crawl=False)
+    print(singer['info_items'])
     song_urls = getSongURL(crawl=False)
     print(len(song_urls))
     ss_edges = getSSEdge(crawl=False)

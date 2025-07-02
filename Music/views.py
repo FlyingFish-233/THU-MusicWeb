@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib import messages
 from django.db.models import Q
+from django.urls import reverse
 import time
 
 LIST_NUM = 20
@@ -114,4 +115,4 @@ def comment(request, id):
             )
             messages.success(request, "评论发布成功！")
 
-    return redirect(f'song/detail/{id}#commentMainBlock')
+    return redirect(reverse('song_detail', kwargs={'id': id}) + '#commentMainBlock')
